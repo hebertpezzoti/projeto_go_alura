@@ -1,6 +1,7 @@
 services:
   postgres:
-    image: "postgres"
+    # Versão mais estável para evitar erros:
+    image: "postgres:15"
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
@@ -18,3 +19,5 @@ services:
       - 8080:8080
     depends_on:
       - postgres
+    # Adicionado caso tenha problema de conexão com o banco:
+    restart: on-failure
