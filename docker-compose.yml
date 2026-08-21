@@ -21,3 +21,10 @@ services:
       - postgres
     # Adicionado caso tenha problema de conexão com o banco:
     restart: on-failure
+    # Aduicionado variáveis de ambiente para conexão
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=root
+      - DB_PORT=5432
