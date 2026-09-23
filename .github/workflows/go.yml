@@ -15,20 +15,23 @@ jobs:
     # Passos do meu job:
     steps:
     # A Action abaixo faz um git clone do nosso projeto e acessa a pasta do projeto
-    # normalmente chamdo de "workflow":
-    - uses: actions/checkout@v4
+    # normalmente chamado de "workflow":
+    - uses: actions/checkout@v5
 
     # A Action abaixo define a versão do GO que iremos usar, que é a "1.22"
     - name: Set up Go
-      uses: actions/setup-go@v4
+      uses: actions/setup-go@v5
       with:
         go-version: '1.22'
 
     - name: Inicia banco
-      run: docker-compose up -d postgres
+      run: docker compose up -d postgres
 
     - name: Lint
-      run: docker run --rm -itv $(CURDIR):/app -w /app golangci/golangci-lint golangci-lint run controllers/ database/ models/ routes/
-
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: v1.59
+        args: controllers/ database/ models/ routes/
+        
     - name: Test
-      run: go test -v main_test.go
+      run: DB_HOST=${{ secrets.DB_HOST }} DB_PASSWORD=${{ secrets.DB_PASSWORD }} DB_USER=${{ secrets.DB_USER }} DB_NAME=${{ secrets.DB_NAME }} DB_PORT=${{ secrets.DB_PORT }} go test -v main_test.go
